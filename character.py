@@ -18,8 +18,7 @@ class Character:
         if self.is_defending:
             damage //= 2  # 防御中はダメージを半減
         self.hp -= damage
-        if self.hp < 0:
-            self.hp = 0  # HPが0未満にならないようにする
+        self.hp = max(self.hp, 0)  # HPが0未満にならないようにする
 
     def choose_move(self, move_name):
         """

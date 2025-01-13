@@ -24,8 +24,10 @@ while player.hp > 0 and enemy.hp > 0:
     try:
         choice = int(input("選択: "))
         if choice == 4:
-            battle.defend(player)  # 防御を選んだ場合
+            # 防御を選んだ場合、防御状態をセットしてターンを終了
+            player.is_defending = True
             last_player_move = None  # 防御時は技の連続使用制限をリセット
+            print(f"{player.name} は防御を選びました！")
             continue  # 防御選択時はターンを終了
         elif 1 <= choice <= 3:
             if last_player_move == choice:
@@ -40,16 +42,17 @@ while player.hp > 0 and enemy.hp > 0:
         print("無効な入力です。数字を入力してください。")
         continue
 
-    # 敵が防御中なら防御解除
-    enemy.is_defending = False  # 敵の防御状態を解除
-
-    # プレイヤーの攻撃が終わった後に敵のダメージを計算
-    if enemy.hp <= 0:
-        print(f"{enemy.name} を倒した！ 勝利！")
-        break
+    # 敵ターン
+    enemy_choice = random.randint(1, 3)
+    battle.start_battle(enemy_choice)  # 敵のターンに技を選択
 
     # プレイヤーと敵のHPを表示
     print(f"\nプレイヤーのHP: {player.hp}, 敵のHP: {enemy.hp}")
+
+    # 勝敗判定
     if player.hp <= 0:
         print(f"{player.name} は倒れた！ 敗北！")
+        break
+    elif enemy.hp <= 0:
+        print(f"{enemy.name} を倒した！ 勝利！")
         break

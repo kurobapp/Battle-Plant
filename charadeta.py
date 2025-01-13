@@ -1,5 +1,5 @@
 from character import Character  # Character クラスをインポート
-
+import random
 class Technique:
     """技のクラス"""
     def __init__(self, name, attribute, damage):
@@ -28,10 +28,13 @@ def choose_random_character():
 
     # キャラクターを定義
     characters = [
-        Character("水", hp=100, attack=20, speed=80, techniques=water_techniques),
-        Character("炎", hp=100, attack=25, speed=70, techniques=fire_techniques),
-        Character("草", hp=100, attack=15, speed=90, techniques=grass_techniques),
+        Character("水", hp=random.randint(90, 110), attack=random.randint(18, 25), speed=random.randint(70, 90), techniques=water_techniques),
+        Character("炎", hp=random.randint(90, 110), attack=random.randint(20, 30), speed=random.randint(60, 80), techniques=fire_techniques),
+        Character("草", hp=random.randint(90, 110), attack=random.randint(15, 22), speed=random.randint(80, 100), techniques=grass_techniques),
     ]
 
-    import random
-    return random.choice(characters)
+    # ランダムにキャラクターを選んで返す
+    chosen_character = random.choice(characters)
+    print(f"{chosen_character.name}キャラクターが選ばれました！")
+    
+    return chosen_character

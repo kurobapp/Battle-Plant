@@ -1,4 +1,4 @@
-import random  # random モジュールをインポート
+import random
 
 class BattleSystem:
     def __init__(self, player, enemy):
@@ -20,7 +20,6 @@ class BattleSystem:
         else:
             return "same"
 
-
     def start_battle(self, player_choice):
         """バトルを開始"""
         player_technique = self.player.techniques[player_choice - 1]
@@ -30,22 +29,24 @@ class BattleSystem:
         print(f"プレイヤーの技: {player_technique.name} ({player_technique.attribute})")
         print(f"敵の技: {enemy_technique.name} ({enemy_technique.attribute})")
 
-        # 属性の判定
+        # プレイヤーが防御を選んだターン
+        if player_choice == 4:  # 防御選択時
+            print(f"{self.player.name} は防御を選択しました！")
+            self.player.is_defending = True  # 防御を選択
+            damage = enemy_technique.damage // 2  # 半減
+            self.player.hp -= damage
+            if self.player.hp < 0:
+                self.player.hp = 0
+            print(f"{self.enemy.name} の {enemy_technique.name} が {self.player.name} に {damage} ダメージ！")
+            print(f"{self.player.name} の残りHP: {self.player.hp}")
+            return  # 防御選択後はターン終了
+
+        # 属性判定
         result = self.calculate_advantage(
             player_technique.attribute, enemy_technique.attribute
         )
 
-        # プレイヤーが防御中ならダメージを半減
-        if self.player.is_defending:
-            print(f"{self.player.name} は防御中なので、ダメージが半減します！")
-            damage = player_technique.damage // 2  # 半減
-            self.enemy.hp -= damage
-            if self.enemy.hp < 0:
-                self.enemy.hp = 0
-            print(f"{self.player.name} の {player_technique.name} が {self.enemy.name} に {damage} ダメージ！")
-            print(f"{self.enemy.name} の残りHP: {self.enemy.hp}")
-            return  # 攻撃後ターン終了
-
+        # 属性有利判定
         if result == "attacker":
             print("プレイヤーの属性が有利！")
             self.attack(self.player, self.enemy, player_technique)
@@ -66,7 +67,7 @@ class BattleSystem:
     def attack(self, attacker, defender, technique):
         """攻撃を処理"""
         damage = technique.damage
-        if defender.is_defending:  # 防御中ならダメージを半減
+        if defender.is_defending:  # 防御中ならダメージ半減
             damage //= 2
             print(f"{defender.name} は防御中！ダメージが半減！")
 
@@ -77,8 +78,5 @@ class BattleSystem:
         print(f"{attacker.name} の {technique.name} が命中！ {defender.name} に {damage} ダメージ！")
         print(f"{defender.name} の残りHP: {defender.hp}")
 
-
-    def defend(self, character):
-        """防御の処理"""
-        character.is_defending = True
-        print(f"{character.name} は防御の体勢をとった！")
+        # 防御状態を終了
+        defender.is_defending = False
