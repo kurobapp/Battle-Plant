@@ -14,7 +14,7 @@ def start_stage(stage_enemies, stage_number):
     print(f"\n--- ステージ {stage_number} ---")
     print(f"{player.name} のHP: {player.hp}, スピード: {player.speed}")
     enemy = random.choice(stage_enemies)
-    print(f"敵のキャラクター: {enemy.name} (HP: {enemy.hp}, Speed: {enemy.speed})")
+    print(f"敵のクリーチャー: {enemy.name} (HP: {enemy.hp}, Speed: {enemy.speed})")
 
     battle = BattleSystem(player, enemy)
     player.reset_previous_move()
