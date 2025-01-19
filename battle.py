@@ -13,8 +13,8 @@ class BattleSystem:
 
         advantage_chart = {
         "炎": {"強い": "水", "弱い": "草"},  # 炎は草に強く、水に弱い
-        "水": {"強い": "炎", "弱い": "草"},  # 水は炎に強く、草に弱い
-        "草": {"強い": "水", "弱い": "炎"},  # 草は水に強く、炎に弱い
+        "水": {"強い": "草", "弱い": "炎"},  # 水は炎に強く、草に弱い
+        "草": {"強い": "炎", "弱い": "水"},  # 草は水に強く、炎に弱い
         }
 
         if defender_attribute == advantage_chart[attacker_attribute]["弱い"]:
@@ -64,23 +64,7 @@ class BattleSystem:
                 print("速度も同じ！引き分け！")
 
     def attack(self, attacker, defender, technique):
-        """攻撃を処理"""
-        if technique.effect == "reduce_damage":  # 防御技の処理
-            print(f"{attacker.name} は防御を選択した！")
-            return  # 防御では直接攻撃しないので処理終了
-        
-        # 攻撃技の処理
-        damage = technique.damage
-        defender.hp -= damage
-        defender.hp = max(defender.hp, 0)  # HPが0未満にならないようにする
-
-        print(f"{attacker.name} の {technique.name} が命中！ {defender.name} に {damage} ダメージ！")
-        print(f"{defender.name} の残りHP: {defender.hp}")
-
-    def calculate_damage(self, attacker, defender, technique, defender_is_defending):
-        """ダメージ計算処理"""
-        damage = technique.damage
-        if defender_is_defending:
-            damage //= 2  # ダメージを半減
-            print(f"{defender.name} の防御によってダメージが半減された！")
-        return damage
+        """攻撃処理"""
+        damage = technique.damage  # ここでダメージを計算
+        print(f"{attacker.name} の攻撃: {technique.name} ({damage}ダメージ)")
+        defender.take_damage(damage)  # ダメージを与える

@@ -1,38 +1,40 @@
 class Character:
-    def __init__(self, name, hp, attack, speed, techniques=None):
+    def __init__(self, name, hp, speed, techniques=None):
         self.name = name
         self.hp = hp
         self.max_hp = hp
-        self.attack = attack
         self.speed = speed
         self.previous_move = None  # 前回の技名を保存
         self.techniques = techniques if techniques else []  # 技のリストを追加
+        self.defending = False  # 防御状態を管理するフラグ
 
     def is_alive(self):
         """キャラクターが生存しているか確認"""
         return self.hp > 0
 
     def take_damage(self, damage):
-        """ダメージを受ける処理"""
-        self.hp -= damage
+        """ダメージを受ける処理 (防御中はダメージ半減)"""
+        if self.defending:
+            damage /= 2  # 防御中はダメージを半減
+            print(f"{self.name} は防御しているため、ダメージが半分になった！")
+        self.hp -= int(damage)
         self.hp = max(self.hp, 0)  # HPが0未満にならないようにする
 
     def choose_move(self, move_name):
-        """
-        技の選択処理
-        - move_name: 選択された技名
-        - 同じ技を連続使用できない制約を追加
-        """
         if move_name == self.previous_move and move_name != "防御":
-            return False, "同じ技を連続で使用することはできません！"  # 同じ技の連続使用は禁止
+            return False, "同じ技を連続で使用することはできません！"  # 防御技以外は連続使用を禁止
 
-        # 防御技の場合、前回の技をリセット
+        # 防御技が選ばれた場合はリセット
         if move_name == "防御":
-            self.previous_move = None  # 防御を使用した場合、リセット
-        
-        self.previous_move = move_name  # 選んだ技を記録
+            self.previous_move = "防御"  # 防御技を選んだときは前回の技を防御に更新
+            self.defending = True  # 防御状態をオンにする
+        else:
+            self.previous_move = move_name  # 防御以外の技の場合は通常通り
+            self.defending = False  # 防御状態をオフにする
+
         return True, f"{self.name} は {move_name} を選択しました！"
 
-    def get_hp_ratio(self):
-        """HPの割合を計算"""
-        return self.hp / self.max_hp
+    def reset_previous_move(self):
+        """前回の技をリセット"""
+        self.previous_move = None  # 技のリセット
+        self.defending = False  # 防御状態をリセット
