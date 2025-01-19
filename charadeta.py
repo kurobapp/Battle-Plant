@@ -1,11 +1,13 @@
 from character import Character  # Character クラスをインポート
 import random
+
 class Technique:
     """技のクラス"""
-    def __init__(self, name, attribute, damage):
+    def __init__(self, name, attribute, damage, effect=None):
         self.name = name
         self.attribute = attribute
         self.damage = damage
+        self.effect = effect  # 新たにeffect属性を追加
 
 def choose_random_character():
     """ランダムにキャラクターを選択"""
